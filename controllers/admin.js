@@ -1,9 +1,9 @@
-const Product = require("../models/product");
+const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
-  res.render("admin/edit-product", {
-    pageTitle: "Add Product",
-    path: "/admin/add-product",
+  res.render('admin/edit-product', {
+    pageTitle: 'Add Product',
+    path: '/admin/add-product',
     editing: false,
   });
 };
@@ -17,9 +17,7 @@ exports.postAddProduct = (req, res, next) => {
   product
     .save()
     .then((result) => {
-      // console.log(result);
-      console.log("Created Product");
-      res.redirect("/admin/products");
+      res.redirect('/admin/products');
     })
     .catch((err) => {
       console.log(err);
@@ -65,23 +63,22 @@ exports.postEditProduct = (req, res, next) => {
       return product.save();
     })
     .then((result) => {
-      console.log("UPDATED PRODUCT!");
-      res.redirect("/admin/products");
+      res.redirect('/admin/products');
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log('postEditProduct', err));
 };
 
 exports.getProducts = (req, res, next) => {
   req.user
     .getProducts()
     .then((products) => {
-      res.render("admin/products", {
+      res.render('admin/products', {
         prods: products,
-        pageTitle: "Admin Products",
-        path: "/admin/products",
+        pageTitle: 'Admin Products',
+        path: '/admin/products',
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log('getProducts', err));
 };
 
 exports.postDeleteProduct = (req, res, next) => {
@@ -91,8 +88,8 @@ exports.postDeleteProduct = (req, res, next) => {
       return product.destroy();
     })
     .then((result) => {
-      console.log("DESTROYED PRODUCT");
-      res.redirect("/admin/products");
+      console.log('DESTROYED PRODUCT');
+      res.redirect('/admin/products');
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log('postDeleteProduct', err));
 };

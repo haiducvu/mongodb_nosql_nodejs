@@ -4,13 +4,6 @@ const MongoClient = mongodb.MongoClient;
 let _db;
 
 const mongoConnect = (callback) => {
-  // MongoClient.connect(
-  //   'mongodb+srv://maximilian:9u4biljMQc4jjqbe@cluster0-ntrwp.mongodb.net/test?retryWrites=true'
-  // )
-  // MongoClient.connect("mongodb://localhost:27017/mern_auth", {
-  //   useNewUrlParser: true,
-  //   useUnifiedTopology: true,
-  // })
   MongoClient.connect(
     `mongodb+srv://${process.env.DATABASE_NAME}:${process.env.DATABASE_PASS}@cluster0.ir4appl.mongodb.net/shop?retryWrites=true&w=majority`,
     {

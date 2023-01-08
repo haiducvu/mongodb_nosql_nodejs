@@ -1,14 +1,14 @@
-const getDb = require('../util/database').getDb;
 const mongodb = require('mongodb');
+const getDb = require('../util/database').getDb;
 
 class Product {
   constructor(title, price, description, imageUrl, id, userId) {
-    (this.title = title),
-      (this.price = price),
-      (this.description = description),
-      (this.imageUrl = imageUrl),
-      (this._id = id ? new mongodb.ObjectId(id) : null),
-      (this.userId = userId);
+    this.title = title;
+    this.price = price;
+    this.description = description;
+    this.imageUrl = imageUrl;
+    this._id = id ? new mongodb.ObjectId(id) : null;
+    this.userId = userId;
   }
 
   save() {
@@ -23,9 +23,11 @@ class Product {
       dbOp = db.collection('products').insertOne(this);
     }
     return dbOp
-      .then((result) => {})
-      .catch((err) => {
-        console.log('products', err);
+      .then(result => {
+        console.log(result);
+      })
+      .catch(err => {
+        console.log(err);
       });
   }
 
@@ -35,11 +37,12 @@ class Product {
       .collection('products')
       .find()
       .toArray()
-      .then((products) => {
+      .then(products => {
+        console.log(products);
         return products;
       })
-      .catch((err) => {
-        console.log('fetchAll', err);
+      .catch(err => {
+        console.log(err);
       });
   }
 
@@ -49,10 +52,13 @@ class Product {
       .collection('products')
       .find({ _id: new mongodb.ObjectId(prodId) })
       .next()
-      .then((product) => {
+      .then(product => {
+        console.log(product);
         return product;
       })
-      .catch((err) => console.log('findById', err));
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   static deleteById(prodId) {
@@ -60,10 +66,10 @@ class Product {
     return db
       .collection('products')
       .deleteOne({ _id: new mongodb.ObjectId(prodId) })
-      .then((result) => {
+      .then(result => {
         console.log('Deleted');
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }

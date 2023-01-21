@@ -37,8 +37,20 @@ app.use(
   })
 );
 
+// app.use((req, res, next) => {
+//   User.findById('63becc7ea768e920ec479c14')
+//     .then((user) => {
+//       req.user = user;
+//       next();
+//     })
+//     .catch((err) => console.log(err));
+// });
+
 app.use((req, res, next) => {
-  User.findById('63becc7ea768e920ec479c14')
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
     .then((user) => {
       req.user = user;
       next();

@@ -1,13 +1,23 @@
+require('dotenv').config();
 const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+
+const session = require('express-session');
+const MongoDbStore = require('connect-mongodb-session')(session);
+
 const errorController = require('./controllers/error');
-// const mongoConnect = require('./util/database').mongoConnect;
 const User = require('./models/user');
 
+const MONGODB_URI = `mongodb+srv://${process.env.DATABASE_NAME}:${process.env.DATABASE_PASS}@cluster0.ir4appl.mongodb.net/shop?retryWrites=true&w=majority`;
+
 const app = express();
+const store = new MongoDbStore({
+  uri: MONGODB_URI,
+  collection: 'sessions',
+});
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -15,9 +25,17 @@ app.set('views', 'views');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
-require('dotenv').config();
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  session({
+    secret: 'my secret',
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+  })
+);
 
 app.use((req, res, next) => {
   User.findById('63becc7ea768e920ec479c14')
@@ -34,18 +52,12 @@ app.use(authRoutes);
 
 app.use(errorController.get404);
 
-// mongoConnect(() => {
-//   app.listen(3000);
-// });
 mongoose.set('strictQuery', false);
 mongoose
-  .connect(
-    `mongodb+srv://${process.env.DATABASE_NAME}:${process.env.DATABASE_PASS}@cluster0.ir4appl.mongodb.net/shop?retryWrites=true&w=majority`,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then((result) => {
     User.findOne().then((user) => {
       if (!user) {
@@ -59,9 +71,10 @@ mongoose
         user.save();
       }
     });
-
+    console.log('DB connected');
     app.listen(3000);
   })
   .catch((err) => {
+    console.log('DB connect fail');
     console.log('err', err);
   });

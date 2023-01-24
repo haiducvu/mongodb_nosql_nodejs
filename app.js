@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 const session = require('express-session');
 const MongoDbStore = require('connect-mongodb-session')(session);
+const csrf = require('csurf');
 
 const errorController = require('./controllers/error');
 const User = require('./models/user');
@@ -18,6 +19,8 @@ const store = new MongoDbStore({
   uri: MONGODB_URI,
   collection: 'sessions',
 });
+
+const csrfProtection = csrf();
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -37,14 +40,7 @@ app.use(
   })
 );
 
-// app.use((req, res, next) => {
-//   User.findById('63cf591c7e51aba5a6cec09b')
-//     .then((user) => {
-//       req.user = user;
-//       next();
-//     })
-//     .catch((err) => console.log(err));
-// });
+app.use(csrfProtection);
 
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -56,6 +52,12 @@ app.use((req, res, next) => {
       next();
     })
     .catch((err) => console.log(err));
+});
+
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
 });
 
 app.use('/admin', adminRoutes);
@@ -71,19 +73,6 @@ mongoose
     useUnifiedTopology: true,
   })
   .then((result) => {
-    // Dummy data
-    // User.findOne().then((user) => {
-    //   if (!user) {
-    //     const user = new User({
-    //       name: 'hai',
-    //       email: 'duchaivu1997@merry.com',
-    //       cart: {
-    //         items: [],
-    //       },
-    //     });
-    //     user.save();
-    //   }
-    // });
     console.log('DB connected');
     app.listen(3000);
   })

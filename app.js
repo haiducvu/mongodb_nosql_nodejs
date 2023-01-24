@@ -38,7 +38,7 @@ app.use(
 );
 
 // app.use((req, res, next) => {
-//   User.findById('63becc7ea768e920ec479c14')
+//   User.findById('63cf591c7e51aba5a6cec09b')
 //     .then((user) => {
 //       req.user = user;
 //       next();
@@ -71,18 +71,19 @@ mongoose
     useUnifiedTopology: true,
   })
   .then((result) => {
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          name: 'hai',
-          email: 'duchaivu1997@merry.com',
-          cart: {
-            items: [],
-          },
-        });
-        user.save();
-      }
-    });
+    // Dummy data
+    // User.findOne().then((user) => {
+    //   if (!user) {
+    //     const user = new User({
+    //       name: 'hai',
+    //       email: 'duchaivu1997@merry.com',
+    //       cart: {
+    //         items: [],
+    //       },
+    //     });
+    //     user.save();
+    //   }
+    // });
     console.log('DB connected');
     app.listen(3000);
   })

@@ -35,8 +35,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
     secret: 'my secret',
-    resave: false,
-    saveUninitialized: false,
+    resave: false, // is meaning the session will not be saved on every request that is done => performance
+    saveUninitialized: false, // ensure that no session gets saved for a request where it doesn't need to be saved because nothing was changed about it
     store: store,
   })
 );
@@ -44,6 +44,7 @@ app.use(
 app.use(csrfProtection);
 app.use(flash());
 
+// fetch user in middleware before routing
 app.use((req, res, next) => {
   if (!req.session.user) {
     return next();

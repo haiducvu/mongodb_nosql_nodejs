@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 const session = require('express-session');
 const MongoDbStore = require('connect-mongodb-session')(session);
+// using csurf to prevent CSRF Attacks
 const csrf = require('csurf');
 const flash = require('connect-flash');
 
@@ -61,10 +62,11 @@ app.use((req, res, next) => {
       throw new Error(err)
     });
 });
-
+// Add csrfToken in Middleware
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();
+  // console.log('res.locals', res.locals);
   next();
 });
 

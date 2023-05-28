@@ -55,6 +55,7 @@ exports.getSignup = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
+  console.log('---------Login---------')
   const email = req.body.email;
   const password = req.body.password;
 
@@ -167,6 +168,7 @@ exports.postSignup = (req, res, next) => {
 };
 
 exports.postLogout = (req, res, next) => {
+  console.log('---------Logout---------')
   req.session.destroy(err => {
     console.log(err);
     res.redirect('/');

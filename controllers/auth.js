@@ -7,6 +7,7 @@ const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
 
+// Create transporter to telling for Nodemailer
 const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {

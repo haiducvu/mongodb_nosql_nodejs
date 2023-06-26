@@ -10,7 +10,7 @@ const ITEMS_PER_PAGE = 1;
 exports.getProducts = (req, res, next) => {
   Product.find()
     .then((products) => {
-      console.log(products);
+      // console.log(products);
       res.render("shop/product-list", {
         prods: products,
         pageTitle: "All Products",
@@ -43,14 +43,26 @@ exports.getProduct = (req, res, next) => {
 
 exports.getIndex = (req, res, next) => {
   const page = req.query.page;
+  let totalItems;
+
   Product.find()
-    .skip((parseInt(page) - 1) * parseInt(ITEMS_PER_PAGE))
-    .limit(ITEMS_PER_PAGE)
+    .countDocuments()
+    .then(numberProducts => {
+      totalItems = numberProducts;
+      return Product.find()
+      .skip((parseInt(page) - 1) * parseInt(ITEMS_PER_PAGE))
+      .limit(ITEMS_PER_PAGE)
+    })
     .then((products) => {
       res.render("shop/index", {
         prods: products,
         pageTitle: "Shop",
         path: "/",
+        totalProducts: totalItems,
+        hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
       });
     })
     .catch((err) => {
@@ -86,7 +98,7 @@ exports.postCart = (req, res, next) => {
       return req.user.addToCart(product);
     })
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       res.redirect("/cart");
     })
     .catch((err) => {
@@ -175,7 +187,6 @@ exports.getInvoice = (req, res, next) => {
         'attachment; filename="' + invoiceName + '"'
       );
       pdfDoc.pipe(fs.createWriteStream(invoicePath));
-      console.log("res", res);
       pdfDoc.pipe(res);
 
       // html

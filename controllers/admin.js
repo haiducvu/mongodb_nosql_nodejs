@@ -124,6 +124,7 @@ exports.getEditProduct = (req, res, next) => {
 exports.postEditProduct = (req, res, next) => {
   const prodId = req.body.productId;
   const updatedTitle = req.body.title;
+  const updatedPrice = req.body.price;
   const image = req.file;
   const updatedDesc = req.body.description;
 
@@ -158,7 +159,6 @@ exports.postEditProduct = (req, res, next) => {
         fileHelper.deleteFile(product.imageUrl);
         product.imageUrl = image.path;
       }
-      product.imageUrl = updatedImageUrl;
       return product.save().then((result) => {
         console.log("UPDATED PRODUCT!");
         res.redirect("/admin/products");

@@ -14,6 +14,7 @@
     "nodemon": "^2.0.20"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^1.54.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "connect-flash": "^0.1.1",
@@ -33,6 +34,7 @@
     "nodemailer-sendgrid-transport": "^0.2.0",
     "pdfkit": "^0.13.0",
     "pug": "^3.0.2",
-    "sequelize": "^5.0.0-beta.11"
+    "sequelize": "^5.0.0-beta.11",
+    "stripe": "^12.11.0"
   }
 }
